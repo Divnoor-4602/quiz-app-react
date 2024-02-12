@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import QUESTIONS from "../questions.js";
+import quizCompleteImg from "../assets/quiz-complete.png";
 
 export default function Quiz() {
   const [userAnswers, setUserAnswers] = useState([]);
@@ -15,6 +16,21 @@ export default function Quiz() {
   //   shuffling answers
   const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
   shuffle(shuffledAnswers);
+
+  //   quiz completion check
+  const quizIsComplete = activeQuestionIndex === QUESTIONS.length - 1;
+  console.log(quizIsComplete);
+
+  if (quizIsComplete) {
+    return (
+      <>
+        <div id="summary">
+          <h2>Quiz Complete</h2>
+          <img src={quizCompleteImg} alt="trophy icon" />
+        </div>
+      </>
+    );
+  }
 
   // fisher yates algorithm to shuffle the answers on every reload
   function shuffle(array) {
