@@ -1,25 +1,29 @@
-import React, { useState } from "react";
-
+import React, { useState, useCallback } from "react";
+import QuestionTimer from "./QuestionTimer.jsx";
 import QUESTIONS from "../questions.js";
 import quizCompleteImg from "../assets/quiz-complete.png";
 
 export default function Quiz() {
   const [userAnswers, setUserAnswers] = useState([]);
 
-  function handleSelectAnswer(selectedAnswer) {
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
     setUserAnswers((prevAns) => [...prevAns, selectedAnswer]);
-  }
+  },
+  []);
+
+  // if the timer expired skip answer
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
 
   //   as answers are selected the state length increase and the active question changes with it
   const activeQuestionIndex = userAnswers.length;
 
-  //   shuffling answers
-  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffle(shuffledAnswers);
-
   //   quiz completion check
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length - 1;
-  console.log(quizIsComplete);
 
   if (quizIsComplete) {
     return (
@@ -31,6 +35,10 @@ export default function Quiz() {
       </>
     );
   }
+
+  //   shuffling answers
+  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
+  shuffle(shuffledAnswers);
 
   // fisher yates algorithm to shuffle the answers on every reload
   function shuffle(array) {
@@ -44,6 +52,7 @@ export default function Quiz() {
     <>
       <div id="quiz">
         <div id="question">
+          <QuestionTimer timeout={10000} onTimeout={handleSkipAnswer} />
           <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
           <ul id="answers">
             {shuffledAnswers.map((answer) => (
