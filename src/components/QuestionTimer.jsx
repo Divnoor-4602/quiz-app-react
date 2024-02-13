@@ -7,14 +7,24 @@ export default function QuestionTimer({ timeout, onTimeout }) {
 
   useEffect(() => {
     console.log("setting timeout");
-    setTimeout(onTimeout, timeout);
+    const timeout = setTimeout(onTimeout, timeout);
+
+    // cleanup so there is only one interval is running up a time
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [timeout, onTimeout]);
 
   useEffect(() => {
     console.log("setting interval");
-    setInterval(() => {
+    const interval = setInterval(() => {
       setRemainingTime((prevRemainingTime) => prevRemainingTime - 100);
     }, 100);
+
+    // cleaning up so there is only one interval is running up at a a point in time
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (
