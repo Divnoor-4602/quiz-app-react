@@ -7,11 +7,11 @@ export default function QuestionTimer({ timeout, onTimeout }) {
 
   useEffect(() => {
     console.log("setting timeout");
-    const timeout = setTimeout(onTimeout, timeout);
+    const timer = setTimeout(onTimeout, timeout);
 
     // cleanup so there is only one interval is running up a time
     return () => {
-      clearTimeout(timeout);
+      clearTimeout(timer);
     };
   }, [timeout, onTimeout]);
 
